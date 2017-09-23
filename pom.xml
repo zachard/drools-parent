@@ -48,4 +48,7 @@
       </dependencies>
   </dependencyManagement>
   
+  <modules>
+  	<module>hello-drools</module>
+  </modules>
 </project>
