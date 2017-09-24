@@ -1,0 +1,21 @@
+// package必须在第一行，名字可随意，但必须唯一
+package com.builder
+
+// 导入规则文件需要用到的外部文件，import不仅可以导入一个类，也可以是一个类中的静态方法
+import com.zachard.drools.hello.rules.DroolsHello.Message;
+ 
+rule "Hello World"
+    //结果部分，即RHS
+    then
+        System.out.println( myMessage );
+        m.setMessage( "Goodbye cruel world" );
+        m.setStatus( Message.GOODBYE );
+        update( m );
+end
+
+rule "GoodBye"
+    when
+        Message( status == Message.GOODBYE, myMessage : message )
+    then
+        System.out.println( myMessage );
+end
