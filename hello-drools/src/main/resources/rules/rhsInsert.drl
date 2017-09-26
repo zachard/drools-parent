@@ -1,0 +1,22 @@
+package com.rhs
+
+import java.util.List;
+import com.zachard.drools.hello.model.Customer;
+
+rule "rule1"
+    salience 2   // salience表示规则执行的优先级,数字越大,优先级越高
+    when
+        eval(true);
+    then
+        Customer customer = new Customer();  //注: 这里并没有import一个Customer进来
+        customer.setName("张三");
+        insert(customer);   //执行insert语句,会与所有的规则重新匹配一次 (规则no-loop属性没有设置为true)
+end
+
+rule "rule2"
+    salience 1
+    when
+        $customer:Customer(name == "张三");
+    then
+        System.out.println("rule2----" + $customer.getName());
+end

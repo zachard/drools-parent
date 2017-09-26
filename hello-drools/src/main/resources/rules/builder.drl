@@ -5,12 +5,13 @@ package com.builder
 import com.zachard.drools.hello.rules.DroolsHello.Message;
  
 rule "Hello World"
+    when
     //结果部分，即RHS
     then
-        System.out.println( myMessage );
-        m.setMessage( "Goodbye cruel world" );
-        m.setStatus( Message.GOODBYE );
-        update( m );
+        //System.out.println( myMessage );
+        //m.setMessage( "Goodbye cruel world" );
+        //m.setStatus( Message.GOODBYE );
+        //update( m );
 end
 
 rule "GoodBye"

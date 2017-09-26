@@ -15,7 +15,7 @@
       <sl4fj.log4j.version>1.7.21</sl4fj.log4j.version>
       <apache.common.lang3.version>3.4</apache.common.lang3.version>
       <apache.common.collection.version>3.2.1</apache.common.collection.version>
-      <drools.version>7.3.0.Final</drools.version>
+      <drools.version>6.5.0.Final</drools.version>
       <knowledge.api.version>6.5.0.Final</knowledge.api.version>
   </properties>
   
