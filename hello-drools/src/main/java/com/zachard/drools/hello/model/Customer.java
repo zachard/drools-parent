@@ -30,6 +30,11 @@ public class Customer {
 	 * 顾客姓名
 	 */
 	private String name;
+	
+	/**
+	 * 顾客年龄
+	 */
+	private int age;
 
 	/**
 	 * 获取顾客姓名
@@ -48,4 +53,23 @@ public class Customer {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	/**
+	 * 获取顾客年龄
+	 * 
+	 * @return 年龄
+	 */
+	public int getAge() {
+		return age;
+	}
+
+	/**
+	 * 设置顾客年龄
+	 * 
+	 * @param age 顾客年龄
+	 */
+	public void setAge(int age) {
+		this.age = age;
+	}
+
 }

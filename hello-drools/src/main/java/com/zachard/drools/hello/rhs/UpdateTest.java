@@ -17,36 +17,41 @@
 package com.zachard.drools.hello.rhs;
 
 import org.drools.builder.ResourceType;
+import org.drools.runtime.StatefulKnowledgeSession;
+import org.drools.runtime.rule.QueryResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zachard.drools.hello.util.DroolsFactory;
 
 /**
- * 规则结果部分insert方法执行测试类
+ * 规则结果部分update方法执行测试类
  * <pre>
  * </pre>
  *
  * @author zachard
  * @version 1.0.0
  */
-public class InsertTest {
+public class UpdateTest {
 	
-	private static final Logger logger = LoggerFactory.getLogger(InsertTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(UpdateTest.class);
 	
 	/**
 	 * 规则文件路径
 	 */
-	private static final String FILE_PATH = "rules/rhsInsert.drl";
+	private static final String FILE_PATH = "rules/rhsUpdate.drl";
 	
 	/**
-	 * 规则的结果集部分执行insert函数,将对象插入到Working Memory之中
+	 * 结果部分update方法测试
 	 * 
-	 * @param args
+	 * @param args   函数入口参数
 	 */
 	public static void main(String[] args) {
-		DroolsFactory.getStatefulKnowledgeSession(FILE_PATH, InsertTest.class, ResourceType.DRL);
-		logger.info("End...");
+		StatefulKnowledgeSession statefulKnowledgeSession = DroolsFactory
+				.getStatefulKnowledgeSession(FILE_PATH, UpdateTest.class, ResourceType.DRL);
+		QueryResults results = statefulKnowledgeSession.getQueryResults("query fact count");
+		logger.info("Working Memeroy中 Customer 对象个数为: " + results.size());
+		logger.info("Ending...");
 	}
 
 }

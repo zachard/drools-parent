@@ -4,7 +4,7 @@ import java.util.List;
 import com.zachard.drools.hello.model.Customer;
 
 rule "rule1"
-    salience 2   // salience表示规则执行的优先级,数字越大,优先级越高
+    salience 1   // salience表示规则执行的优先级,数字越大,优先级越高
     when
         eval(true);
     then
@@ -14,7 +14,7 @@ rule "rule1"
 end
 
 rule "rule2"
-    salience 1
+    salience 2   // 即使rule2的salience值比rule1大,rule2也会执行,因为insert会触发它的执行
     when
         $customer:Customer(name == "张三");
     then
