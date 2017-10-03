@@ -39,7 +39,12 @@ public class UpdateTest {
 	/**
 	 * 规则文件路径
 	 */
-	private static final String FILE_PATH = "rules/rhsUpdate.drl";
+	//private static final String FILE_PATH = "rules/rhsUpdate.drl";
+	
+	/**
+	 * 以update fact的方式更新对象
+	 */
+	private static final String FILE_PATH = "rules/rhsUpdateFact.drl";
 	
 	/**
 	 * 结果部分update方法测试
