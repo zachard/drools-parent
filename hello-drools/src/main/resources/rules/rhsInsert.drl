@@ -10,7 +10,8 @@ rule "rule1"
     then
         Customer customer = new Customer();  //注: 这里并没有import一个Customer进来
         customer.setName("张三");
-        insert(customer);   //执行insert语句,会与所有的规则重新匹配一次 (规则no-loop属性没有设置为true)
+        //insert(customer);   //执行insert语句,会与所有的规则重新匹配一次 (规则no-loop属性没有设置为true)
+        drools.insert(customer);    //通过drools宏对象来操作Working Memory对象
 end
 
 rule "rule2"
