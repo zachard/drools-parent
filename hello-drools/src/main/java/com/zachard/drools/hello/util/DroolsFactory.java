@@ -78,8 +78,6 @@ public class DroolsFactory {
 		
 		// 3. 创建StatefulKnowledgeSession对象,并为其传入属性,触发规则
 		StatefulKnowledgeSession statefulKnowledgeSession = kBase.newStatefulKnowledgeSession();
-		statefulKnowledgeSession.fireAllRules();
-		statefulKnowledgeSession.dispose();
 		
 		return statefulKnowledgeSession;
 	}

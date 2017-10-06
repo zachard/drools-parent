@@ -25,6 +25,11 @@ package com.zachard.drools.hello.model;
  * @version 1.0.0
  */
 public class Customer {
+	
+	/**
+	 * 顾客ID
+	 */
+	private String id;
 
 	/**
 	 * 顾客姓名
@@ -35,6 +40,24 @@ public class Customer {
 	 * 顾客年龄
 	 */
 	private int age;
+	
+	/**
+	 * 获取顾客ID
+	 * 
+	 * @return    顾客ID
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * 设置顾客ID
+	 * 
+	 * @param id    顾客ID
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * 获取顾客姓名

@@ -18,42 +18,45 @@ package com.zachard.drools.hello.rhs;
 
 import org.drools.builder.ResourceType;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.drools.runtime.rule.QueryResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.zachard.drools.hello.model.Customer;
 import com.zachard.drools.hello.util.DroolsFactory;
 
 /**
- * 规则结果部分delete方法执行测试类
+ * 规则结果部分modify方法测试类
  * <pre>
  * </pre>
  *
  * @author zachard
  * @version 1.0.0
  */
-public class DeleteTest {
+public class ModifyTest {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DeleteTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ModifyTest.class);
 	
 	/**
 	 * 规则文件路径
 	 */
-	private static final String FILE_PATH = "rules/rhsDelete.drl";
+	private static final String FILE_PATH = "rules/rhsModify.drl";
 	
 	/**
-	 * 规则结果部分delete方法测试
+	 * modify方法测试方法入口
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		StatefulKnowledgeSession statefulKnowledgeSession = DroolsFactory
-				.getStatefulKnowledgeSession(FILE_PATH, UpdateTest.class, ResourceType.DRL);
+				.getStatefulKnowledgeSession(FILE_PATH, ModifyTest.class, ResourceType.DRL);
+		Customer customer = new Customer();
+		customer.setId("zachard");
+		customer.setName("zachard");
+		customer.setAge(18);
+		statefulKnowledgeSession.insert(customer);
 		statefulKnowledgeSession.fireAllRules();
 		statefulKnowledgeSession.dispose();
-		QueryResults results = statefulKnowledgeSession.getQueryResults("query fact count");
-		logger.info("Working Memeroy中 Customer 对象个数为: " + results.size());
-		logger.info("Ending...");
+		logger.info("End...");
 	}
 
 }

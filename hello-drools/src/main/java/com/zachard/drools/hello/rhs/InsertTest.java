@@ -17,6 +17,7 @@
 package com.zachard.drools.hello.rhs;
 
 import org.drools.builder.ResourceType;
+import org.drools.runtime.StatefulKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,10 @@ public class InsertTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		DroolsFactory.getStatefulKnowledgeSession(FILE_PATH, InsertTest.class, ResourceType.DRL);
+		StatefulKnowledgeSession statefulKnowledgeSession = DroolsFactory
+				.getStatefulKnowledgeSession(FILE_PATH, InsertTest.class, ResourceType.DRL);
+		statefulKnowledgeSession.fireAllRules();
+		statefulKnowledgeSession.dispose();
 		logger.info("End...");
 	}
 

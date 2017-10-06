@@ -54,6 +54,8 @@ public class UpdateTest {
 	public static void main(String[] args) {
 		StatefulKnowledgeSession statefulKnowledgeSession = DroolsFactory
 				.getStatefulKnowledgeSession(FILE_PATH, UpdateTest.class, ResourceType.DRL);
+		statefulKnowledgeSession.fireAllRules();
+		statefulKnowledgeSession.dispose();
 		QueryResults results = statefulKnowledgeSession.getQueryResults("query fact count");
 		logger.info("Working Memeroy中 Customer 对象个数为: " + results.size());
 		logger.info("Ending...");
