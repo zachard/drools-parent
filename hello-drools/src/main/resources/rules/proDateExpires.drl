@@ -1,0 +1,10 @@
+package com.pro
+
+rule "rule.pro.date.expires.01"
+    //date-expires "2018-10-06"    //设置一个未过期时间
+    date-expires "2017-10-05"    //设置一个已过期时间
+    when
+        eval(true);
+    then
+        System.err.println("规则在有效期时间内,可以执行");
+end
