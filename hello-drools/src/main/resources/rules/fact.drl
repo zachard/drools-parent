@@ -40,18 +40,19 @@ rule "rule.fact.02"
         System.err.println("城市名称为: " + $address.getCity() + "; 地址为: " + $address.getAddressName());
 end
 
-rule "rule.fact.03"
-    salience 2
-    when
-        $address : Address();
-    then
-        // 创建一个Person对象并插入到Working Memory之中
-        Person person = new Person();
-        person.setName("zachard");
-        person.setBirthday(new Date());
-        person.setAddress($address);
-        insert(person);
-end
+// 通过Java方式来设置drl文件中声明的类型对象,并insert到Working Memory之中
+//rule "rule.fact.03"
+//    salience 2
+//    when
+//        $address : Address();
+//    then
+//        // 创建一个Person对象并插入到Working Memory之中
+//        Person person = new Person();
+//        person.setName("zachard");
+//        person.setBirthday(new Date());
+//        person.setAddress($address);
+//        insert(person);
+//end
 
 rule "rule.fact.04"
     salience 1

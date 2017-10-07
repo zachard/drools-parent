@@ -16,7 +16,11 @@
 
 package com.zachard.drools.hello.object;
 
+import java.util.Date;
+
+import org.drools.KnowledgeBase;
 import org.drools.builder.ResourceType;
+import org.drools.definition.type.FactType;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +48,28 @@ public class FactTest {
 	 * 测试在规则文件中declare一个类型并插入对象到Working Memory中方法
 	 * 
 	 * @param args
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException {
 		StatefulKnowledgeSession statefulKnowledgeSession = DroolsFactory
 				.getStatefulKnowledgeSession(FILE_PATH, FactTest.class, ResourceType.DRL);
+		
+		/*
+		 * FactType来获取drl文件中声明的类型,并将它们insert到Working Memory之中
+		 */
+		KnowledgeBase kBase = statefulKnowledgeSession.getKnowledgeBase();
+		FactType addressType = kBase.getFactType("com.fact", "Address");
+		Object address = addressType.newInstance();
+		addressType.set(address, "city", "上海");
+		addressType.set(address, "addressName", "浦东新区");
+		FactType personType = kBase.getFactType("com.fact", "Person");
+		Object person = personType.newInstance();
+		personType.set(person, "name", "zachard");
+		personType.set(person, "birthday", new Date());
+		personType.set(person, "address", address);
+		statefulKnowledgeSession.insert(person);
+		
 		statefulKnowledgeSession.fireAllRules();
 		statefulKnowledgeSession.dispose();
 		logger.info("End...");
