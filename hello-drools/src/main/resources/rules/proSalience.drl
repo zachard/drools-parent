@@ -1,0 +1,36 @@
+package com.pro
+
+rule "rule.pro.salience.01"
+    when
+        eval(true);
+    then
+        System.err.println("随机执行了规则salience.01");
+end
+
+rule "rule.pro.salience.02"
+    when
+        eval(true);
+    then
+        System.err.println("随机执行了规则salience.02");
+end
+
+rule "rule.pro.salience.03"
+    when
+        eval(true);
+    then
+        System.err.println("随机执行了规则salience.03");
+end
+
+rule "rule.pro.salience.04"
+    when
+        eval(true);
+    then
+        System.err.println("随机执行了规则salience.04");
+end
+
+rule "rule.pro.salience.05"
+    when
+        eval(true);
+    then
+        System.err.println("随机执行了规则salience.05");
+end

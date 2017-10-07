@@ -1,0 +1,27 @@
+package com.rhs
+
+import com.zachard.drools.hello.model.Customer;
+
+rule "rule.rhs.modify.01"
+    salience 2
+    when
+        // 加上 age == 18 的属性原因: 因为modify会触发所有规则执行,modify中没有修改name,若只用
+        // name == "zachard" 过滤,会导致死循环
+        $customer : Customer( name == "zachard", age == 18 )
+    then
+        System.err.println("Modify修改之前: id = " + $customer.getId() 
+            + "; age = " + $customer.getAge());
+        modify($customer) {     // 注意modify这个语句块的语法,里面的语句只能用逗号,最后一句没有逗号
+            setId("super man"),
+            setAge(20)
+        }
+end
+
+rule "rule.rhs.modify.02"
+    salience 1
+    when
+        $customer : Customer( name == "zachard" )
+    then
+        System.err.println("Modify修改之后: id = " + $customer.getId() 
+            + "; age = " + $customer.getAge());
+end

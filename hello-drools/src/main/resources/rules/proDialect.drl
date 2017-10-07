@@ -1,0 +1,16 @@
+package com.pro
+
+rule "rule.pro.dialect.01"
+    when
+        eval(true);
+    then
+        System.err.println("Drools默认的语言为: " + drools.getRule().getDialect());
+end
+
+rule "rule.pro.dialect.02"
+    dialect "mvel"
+    when
+        eval(true);
+    then
+        System.err.println("Drools指定的语言为: " + drools.getRule().getDialect());
+end

@@ -1,0 +1,28 @@
+package com.rhs
+
+import com.zachard.drools.hello.model.Customer;
+
+query "query fact count"     //查询当前Working Memeroy中含有多少个Customer对象
+    Customer();
+end
+
+rule "rule.rhs.delete.01"
+    salience 2
+    when
+        eval(true);
+    then
+        Customer customer = new Customer();
+        customer.setName( "zachard" );
+        customer.setAge( 18 );
+        insert( customer );
+        System.err.println("向 Working Memory 中插入一个对象");
+end
+
+rule "rule.rhs.delete.02"
+    salience 1
+    when
+        $customer : Customer(name == "zachard");
+    then
+        retract($customer);     //将对象从Working Memory中删除
+        System.err.println("将对象从 Working Memory 中删除");
+end

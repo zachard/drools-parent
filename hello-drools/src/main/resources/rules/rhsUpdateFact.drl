@@ -1,0 +1,31 @@
+package com.rhs
+
+import com.zachard.drools.hello.model.Customer;
+
+query "query fact count"     //查询当前Working Memeroy中含有多少个Customer对象
+    Customer();
+end
+
+rule "rule.rhs.update.fact.01"
+    salience 1
+    when
+        eval(true);
+    then
+        Customer customer = new Customer();
+        customer.setName("zachard");
+        customer.setAge(18);
+        insert(customer);
+        System.err.println("向drools中插入了Customer对象");
+end
+
+rule "rule.rhs.update.fact.02"
+    salience 2
+    when
+        $customer : Customer(name == "zachard", age < 20);
+    then
+        Customer newCustomer = new Customer();
+        newCustomer.setName("zachard");
+        newCustomer.setAge($customer.getAge() + 1);
+        update(drools.getWorkingMemory().getFactHandleByIdentity($customer), newCustomer);
+        System.err.println("客户的姓名为: " + $customer.getName() + "; 客户的年龄为: " + $customer.getAge());
+end

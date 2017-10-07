@@ -1,0 +1,28 @@
+package com.pro
+
+rule "rule.pro.auto.focus.01"
+    agenda-group "group.01"
+    auto-focus true    // 自动获取焦点
+    when
+        eval(true);
+    then
+        System.err.println("agenda-group名称为group.01的rule.pro.auto.focus.01规则执行了");
+end
+
+rule "rule.pro.auto.focus.02"
+    agenda-group "group.01"
+    // auto-focus true   // agenda-group属性相同的规则,只需要一个规则中指定auto-focus为true,则该组下的规则全部会执行
+    when
+        eval(true);
+    then
+        System.err.println("agenda-group名称为group.01的rule.pro.auto.focus.02规则执行了");
+end
+
+rule "rule.pro.auto.focus.03"
+    agenda-group "group.02"
+    auto-focus true
+    when
+        eval(true);
+    then
+        System.err.println("agenda-group名称为group.02的rule.pro.auto.focus.03规则执行了");
+end
