@@ -16,6 +16,8 @@
 
 package com.zachard.drools.hello.model;
 
+import java.util.List;
+
 /**
  * DRL规则文件需要的实体类
  * <pre>
@@ -40,6 +42,11 @@ public class Customer {
 	 * 顾客年龄
 	 */
 	private int age;
+	
+	/**
+	 * 顾客订单
+	 */
+	private List<Order> orders;
 	
 	/**
 	 * 获取顾客ID
@@ -95,4 +102,22 @@ public class Customer {
 		this.age = age;
 	}
 
+	/**
+	 * 获取顾客订单
+	 * 
+	 * @return   顾客订单列表
+	 */
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	/**
+	 * 设置顾客订单列表
+	 * 
+	 * @param orders    需要设置的订单
+	 */
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+	
 }
