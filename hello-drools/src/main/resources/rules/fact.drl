@@ -1,0 +1,30 @@
+package com.fact
+
+/**
+ * 定义一个Address类型,包含city及addressName属性
+ * 相当于定义了一个名为Address的Java类,类中包含city及addressName属性
+ */
+declare Address
+    city : String
+    addressName : String
+end
+
+rule "rule.fact.01"
+    salience 2
+    when
+        eval(true);
+    then
+        // 创建一个Address对象,并将它插入到Working Memory之中
+        Address address = new Address();
+        address.setCity("上海");
+        address.setAddressName("松江区");
+        insert(address);
+end
+
+rule "rule.fact.02"
+    salience 1
+    when
+        $address : Address();
+    then
+        System.err.println("城市名称为: " + $address.getCity() + "; 地址为: " + $address.getAddressName());
+end
