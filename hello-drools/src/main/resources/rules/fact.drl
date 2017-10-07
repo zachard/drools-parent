@@ -1,5 +1,7 @@
 package com.fact
 
+import java.util.Date;
+
 /**
  * 定义一个Address类型,包含city及addressName属性
  * 相当于定义了一个名为Address的Java类,类中包含city及addressName属性
@@ -9,8 +11,17 @@ declare Address
     addressName : String
 end
 
+/**
+ * 定义一个复杂对象类型,其中一个属性为对象类型
+ */
+declare Person
+    name : String
+    birthday : Date
+    address : Address
+end
+
 rule "rule.fact.01"
-    salience 2
+    salience 4
     when
         eval(true);
     then
@@ -22,9 +33,32 @@ rule "rule.fact.01"
 end
 
 rule "rule.fact.02"
-    salience 1
+    salience 3
     when
         $address : Address();
     then
         System.err.println("城市名称为: " + $address.getCity() + "; 地址为: " + $address.getAddressName());
+end
+
+rule "rule.fact.03"
+    salience 2
+    when
+        $address : Address();
+    then
+        // 创建一个Person对象并插入到Working Memory之中
+        Person person = new Person();
+        person.setName("zachard");
+        person.setBirthday(new Date());
+        person.setAddress($address);
+        insert(person);
+end
+
+rule "rule.fact.04"
+    salience 1
+    when
+        $person : Person();
+    then
+        // 输出人物信息
+        System.err.println("姓名为: " + $person.getName() + "; 生日为: " + $person.getBirthday() 
+            + "; 住址为: " + $person.getAddress().getCity() + $person.getAddress().getAddressName());
 end
