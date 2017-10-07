@@ -1,0 +1,17 @@
+package com.pro
+
+rule "rule.pro.duration.01"
+    duration 3   // 表示在指定时间之后，规则将在另一线程中触发 (时间单位未知)
+    when
+        eval(true);
+    then
+        System.err.println("执行规则的时间戳: " + System.currentTimeMillis());
+        System.err.println("指定Duration执行规则的线程ID为: " + Thread.currentThread().getId());
+end
+
+rule "rule.pro.duration.02"
+    when
+        eval(true);
+    then
+        System.err.println("未指定Duration执行规则的线程ID为: " + Thread.currentThread().getId());
+end
