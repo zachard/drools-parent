@@ -1,0 +1,50 @@
+package com.func
+
+import java.util.List;
+import java.util.ArrayList;
+
+import com.zachard.drools.hello.model.Customer;
+import com.zachard.drools.hello.model.Order;
+
+import function com.zachard.drools.hello.util.FunctionTool.printName;
+
+/**
+ * 为客户添加订单列表
+ * 
+ * @param  customer   客户对象
+ * @param  size       添加的订单数量
+ */
+function void setOrder(Customer customer, int size) {
+    List<Order> orders = new ArrayList<>();
+    
+    for (int i = 0; i < size; i++) {
+        Order order = new Order();
+        orders.add(order);
+    }
+    
+    customer.setOrders(orders);
+}
+
+rule "rule.func.01"
+    when
+        $customer : Customer();
+    then
+        setOrder($customer, 5);
+        System.err.println("rule.func.01规则中顾客的订单数量为: " + $customer.getOrders().size());
+end
+
+rule "rule.func.02"
+    when
+        $customer : Customer();
+    then
+        setOrder($customer, 10);
+        System.err.println("rule.func.02规则中顾客的订单数量为: " + $customer.getOrders().size());
+end
+
+rule "rule.func.03"
+    when
+        eval(true);
+    then
+        // 执行import function 导入的Java文件中的静态函数
+        printName("zachard");
+end

@@ -1,0 +1,21 @@
+package com.que
+
+import com.zachard.drools.hello.model.Customer;
+
+/**
+ * 无条件查询示例
+ * 根据顾客的年龄及订单数量查询顾客列表
+ */
+query "queryCustomerByAgeAndOrder"
+    customer : Customer(age > 30, orders.size > 5)
+end
+
+/**
+ * 指定条件查询示例
+ * 根据顾客年龄查询顾客列表
+ *
+ * @param age    顾客年龄
+ */
+query "queryCustomerByAge" (int $age)
+    customer : Customer(age > $age)
+end

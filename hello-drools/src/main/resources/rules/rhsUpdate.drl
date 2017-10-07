@@ -1,0 +1,29 @@
+package com.rhs
+
+import com.zachard.drools.hello.model.Customer;
+
+query "query fact count"     //查询当前Working Memeroy中含有多少个Customer对象
+    Customer();
+end
+
+rule "rule.rhs.update.01"
+    salience 1
+    when
+        eval(true);
+    then
+        Customer customer = new Customer();
+        customer.setName( "zachard" );
+        customer.setAge( 18 );
+        insert( customer );
+end
+
+rule "rule.rhs.update.02"
+    salience 2
+    no-loop true    //表示不会循环触发规则
+    when
+        $customer : Customer( name == "zachard", age < 20 );
+    then
+        $customer.setAge( $customer.getAge() + 1 );
+        update( $customer );    // 注意观察update更新之后触发了哪些规则执行
+        System.out.println( "顾客的年龄为: " + $customer.getAge() );
+end

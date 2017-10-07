@@ -1,0 +1,25 @@
+package com.pro
+
+rule "rule.pro.agenda.group.01"
+    agenda-group "group.01"
+    when
+        eval(true);
+    then
+        System.err.println("agenda-group为group.01的rule.pro.agenda.group.01规则执行了");
+end
+
+rule "rule.pro.agenda.group.02"
+    agenda-group "group.01"
+    when
+        eval(true);
+    then
+        System.err.println("agenda-group为group.01的rule.pro.agenda.group.02规则执行了");
+end
+
+rule "rule.pro.agenda.group.03"
+    agenda-group "group.02"
+    when
+        eval(true);
+    then
+        System.err.println("agenda-group为group.02的rule.pro.agenda.group.03规则执行了");
+end
