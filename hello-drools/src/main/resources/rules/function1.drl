@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import com.zachard.drools.hello.model.Customer;
 import com.zachard.drools.hello.model.Order;
 
+import function com.zachard.drools.hello.util.FunctionTool.printName;
+
 /**
  * 为客户添加订单列表
  * 
@@ -37,4 +39,12 @@ rule "rule.func.02"
     then
         setOrder($customer, 10);
         System.err.println("rule.func.02规则中顾客的订单数量为: " + $customer.getOrders().size());
+end
+
+rule "rule.func.03"
+    when
+        eval(true);
+    then
+        // 执行import function 导入的Java文件中的静态函数
+        printName("zachard");
 end
