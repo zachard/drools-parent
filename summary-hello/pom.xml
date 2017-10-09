@@ -45,6 +45,16 @@
 		    <artifactId>commons-collections</artifactId>
 		</dependency>
 		
+		<!-- mysql and database -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId>
+		</dependency>
+		
 		<!-- drools -->
 		<dependency>
 		    <groupId>org.kie</groupId>

@@ -18,6 +18,8 @@
       <apache.common.collection.version>3.2.1</apache.common.collection.version>
       <drools.version>6.5.0.Final</drools.version>
       <knowledge.api.version>6.5.0.Final</knowledge.api.version>
+      <mysql.version>5.1.30</mysql.version>
+      <druid.version>0.2.26</druid.version>
   </properties>
   
   <dependencyManagement>
@@ -61,6 +63,18 @@
 		      <groupId>commons-collections</groupId>
 		      <artifactId>commons-collections</artifactId>
 		      <version>${apache.common.collection.version}</version>
+		  </dependency>
+		  
+		  <!-- mysql and database -->
+		  <dependency>
+		      <groupId>mysql</groupId>
+		      <artifactId>mysql-connector-java</artifactId>
+		      <version>${mysql.version}</version>
+		  </dependency>
+		  <dependency>
+		      <groupId>com.alibaba</groupId>
+		      <artifactId>druid</artifactId>
+		      <version>${druid.version}</version>
 		  </dependency>
 		  
 		  <!-- drools -->
