@@ -1,0 +1,211 @@
+package com.zachard.integral
+
+import com.zachard.drools.hello.summary.model.User;
+import com.zachard.drools.hello.summary.model.Order;
+import java.util.Scanner;
+import com.zachard.drools.hello.summary.dao.UserDao;
+
+/**
+ * 打印用户订单消费记录函数
+ */
+ function void logUserConsume(Integer userId, Float amount, Float point) {
+     System.err.println("会员: " + userId + "; 本次消费金额为: " + amount + "; 所得积分为: " + point);
+ }
+ 
+ /**
+  * 打印用户积分变更记录函数
+  */
+function void logUserPointUpdate(Integer userId, String type, Float point) {
+    System.err.println("会员: " + userId + "进行规则: " + type + "积分变更" + ", 总积分为: " + point);
+}
+
+// 初级会员规则01: 买20及20以下的货物赠送积分 订单总额 * 0.5 
+rule "primaryMember.01"
+    salience 100  //优先级为100,值越大,优先级越高
+    lock-on-active true   //设置规则只能被触发一次
+    
+    when
+        $order : Order(orderAmount <= 20.0);   // 存在一个Order类型的对象,订单的总额小于等于20
+        $user : User(userLevel == "初级会员");  // 用户已登录,并且登录的用户为初级会员
+    then
+        $order.setOrderPoint((float) ($order.getOrderAmount() * 0.5));  // 设置订单的积分
+        // 设置用户积分(原来积分加上新增订单积分)
+        $user.setUserPoint((float) ($user.getUserPoint() + $order.getOrderAmount() * 0.5));
+        logUserConsume($user.getUserId(), $order.getOrderAmount(), $order.getOrderPoint());
+        logUserPointUpdate($user.getUserId(), "primaryMember.01", $user.getUserPoint());
+end
+
+// 初级会员规则02: 买20到50之间的货物赠送积分 20 * 0.5 + (订单总额 - 20) * 0.7
+rule "primaryMember.02"
+    salience 99
+    lock-on-active true
+    
+    when
+        $order : Order(orderAmount > 20.0 && orderAmount <= 50.0);  // 存在Order类型对象,并且订单总额大于20小于50
+        $user : User(userLevel == "初级会员");    // 用户已登录,并且登录用户为初级会员
+    then
+        $order.setOrderPoint((float) (($order.getOrderAmount() - 20) * 0.7 + 10));  // 设置订单积分
+        $user.setUserPoint((float) ($user.getUserPoint() + ($order.getOrderAmount() - 20) * 0.7 + 10));
+        	logUserConsume($user.getUserId(), $order.getOrderAmount(), $order.getOrderPoint());
+        	logUserPointUpdate($user.getUserId(), "primaryMember.02", $user.getUserPoint());
+end
+
+// 初级会员规则03: 买超过50积分的货物赠送积分 订单总额 * 0.7
+rule "primaryMember.03"
+    salience 98
+    lock-on-active true
+    
+    when
+        $order : Order(orderAmount > 50);    // 存在Order类型的对象,并且订单总额大于50
+        $user : User(userLevel == "初级会员");    // 用户已登录,并且登录用户为初级会员
+    then
+        $order.setOrderPoint((float) ($order.getOrderAmount() * 0.7));    // 设置订单积分
+        $user.setUserPoint((float) ($user.getUserPoint() + $order.getOrderAmount() * 0.7));    // 更新用户积分
+        logUserConsume($user.getUserId(), $order.getOrderAmount(), $order.getOrderPoint());
+        	logUserPointUpdate($user.getUserId(), "primaryMember.03", $user.getUserPoint());
+end
+
+// 高级会员规则01: 消费: 9.5折优惠   可得积分: 折后价格 * 0.8 + 5
+rule "highMember.01"
+    salience 101    // 规则的优先级比 primaryMember.01 高
+    
+    when
+        $order : Order();    // Working Memory 中存在一个订单对象
+        $user : User(userLevel == "高级会员");   // 用户已登录,且登录用户为高级会员
+    then
+        // 对订单进行9.5折优惠 (是不是应该有个字段来记录打折之前的价格)
+        $order.setOrderAmount((float) ($order.getOrderAmount() * 0.95));
+        $order.setOrderPoint((float) ($order.getOrderAmount() * 0.8 + 5));   // 设置订单积分
+        $user.setUserPoint((float) ($user.getUserPoint() + $order.getOrderAmount() * 0.8 + 5));  // 更新用户积分
+        logUserConsume($user.getUserId(), $order.getOrderAmount(), $order.getOrderPoint());
+        	logUserPointUpdate($user.getUserId(), "highMember.01", $user.getUserPoint());
+end
+
+// 初级会员消耗500积分成为高级会员
+rule "primaryToHigh"
+    salience 97
+    lock-on-active true
+    
+    when
+        // 用户已登录,并且用户为初级会员且积分大于500,才会触发规则
+        $user : User(userLevel == "初级会员" && userPoint >= 500);
+    then
+        System.err.println("您的积分已超过500,是否需要升级为高级会员? 是请输入Y: ");
+        Scanner scan = new Scanner(System.in);
+        String flag = scan.nextLine();
+        
+        if ("Y".equals(flag)) {
+            $user.setUserLevel("高级会员");
+            $user.setUserPoint((float) ($user.getUserPoint() - 500));
+            UserDao userDao = new UserDao();
+            
+            // 更新会员的等级及积分需要放在一个事务中, 要么一起成功,要么一起失败(所以不应该在规则文件中执行更新)
+            boolean levelResult = userDao.updateLevelById($user.getUserId(), $user.getUserLevel());
+            boolean pointResult = userDao.updatePointById($user.getUserId(), $user.getUserPoint());
+            
+            if (levelResult && pointResult) {
+                System.err.println("升级高级会员成功");
+                //important 注: 这里必须将setXXX()的修改更新到Working Memory中
+                // 不然当积分大于200时,会触发初级会员转临时会员的规则 (虽然数据库修改为高级会员,但是Working Memory中未更新)
+                update($user);
+            }
+        }
+end
+
+// 临时会员规则01: 
+rule "temporaryMember.01"
+    salience 94
+    lock-on-active true
+    
+    when
+        $order : Order();   // 用户已下单
+        $user : User(userLevel == "临时会员");  // 用户已登录,并且为临时会员
+    then
+        UserDao userDao = new UserDao();
+        
+        // 如果临时会员折扣小于3次,可再次进行折扣
+        if ($user.getFlag() < 3) {
+            $order.setOrderAmount((float) ($order.getOrderAmount() * 0.95));
+            $order.setOrderPoint(0.0f);
+            
+            // 更新临时会员使用次数
+            boolean flagResult = userDao.updateFlagById($user.getUserId());
+            $user.setFlag($user.getFlag() + 1);
+            
+            if (flagResult) {
+                System.err.println("您的临时会员剩余使用次数为: " + (3 - $user.getFlag()));
+                logUserConsume($user.getUserId(), $order.getOrderAmount(), $order.getOrderPoint());
+            }
+        }
+        
+        // 临时会员3次购物之后,自动转为初级会员
+        if ($user.getFlag() == 3) {
+            System.err.println("您的临时会员已使用三次,自动转为初级会员!");
+            $user.setUserLevel("初级会员");
+            userDao.updateLevelById($user.getUserId(), $user.getUserLevel());
+            update($user);
+        }
+end
+
+// 初级会员消耗200积分成为高级会员
+rule "primaryToTemporary"
+    salience 95
+    lock-on-active true
+    
+    when
+        // 系统用户已登录,并且为初级会员且用户积分超过200
+        $user : User(userLevel == "初级会员" && userPoint >= 200);
+    then
+        System.err.println("您的积分已超过200, 是否升级为临时会员? 是请输入Y: ");
+        Scanner scan = new Scanner(System.in);
+        String flag = scan.nextLine();
+        
+        if ("Y".equals(flag)) {
+            $user.setUserLevel("临时会员");
+            $user.setUserPoint((float) ($user.getUserPoint() - 200));
+            UserDao userDao = new UserDao();
+            
+            // 更新会员的等级及积分(应该在事务中操作)
+            boolean levelResult = userDao.updateLevelById($user.getUserId(), $user.getUserLevel());
+            boolean pointResult = userDao.updatePointById($user.getUserId(), $user.getUserPoint());
+            
+            if (levelResult && pointResult) {
+                System.err.println("升级临时会员成功");
+                update($user);
+            }
+        }
+end
+
+// 200积分可抵扣现金2元
+// important: 在这个规则里面,并没有计算订单的积分(会触发积分的规则,所以各个规则只需要做一件事,分而治之)
+rule "allFitPoint"
+    salience 110    // 优先级最高
+    lock-on-active true
+    
+    when
+        $order : Order();   // 用户已下单
+        $user : User(userPoint >= 200);    // 用户已登录,且用户积分大于等于200
+    then
+        System.err.println("您的积分超过200, 是否兑换现金? 是请输入Y: ");
+        Scanner scan = new Scanner(System.in);
+        String flag = scan.nextLine();
+        
+        if ("Y".equals(flag)) {
+            // 订单金额为订单总额减去兑换后的现金
+            $order.setOrderAmount((float) ($order.getOrderAmount() 
+                - Math.floor($user.getUserPoint() / 200) * 2));
+            System.err.println("本次消费: " + $order.getOrderAmount());
+            // 更新用户积分
+            $user.setUserPoint((float) ($user.getUserPoint() - Math.floor($user.getUserPoint() / 200) * 200));
+            
+            UserDao userDao = new UserDao();
+            boolean pointResult = userDao.updatePointById($user.getUserId(), $user.getUserPoint());
+            
+            if (pointResult) {
+                System.err.println("积分兑换成功");
+                logUserPointUpdate($user.getUserId(), "allFitPoint", $user.getUserPoint());
+            } else {
+                update($user);
+            }
+        }
+end
