@@ -58,11 +58,11 @@ public class User implements Serializable {
 	 */
 	private Integer flag;
 
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
 
@@ -82,19 +82,19 @@ public class User implements Serializable {
 		this.userLevel = userLevel;
 	}
 
-	public float getUserPoint() {
+	public Float getUserPoint() {
 		return userPoint;
 	}
 
-	public void setUserPoint(float userPoint) {
+	public void setUserPoint(Float userPoint) {
 		this.userPoint = userPoint;
 	}
 
-	public int getFlag() {
+	public Integer getFlag() {
 		return flag;
 	}
 
-	public void setFlag(int flag) {
+	public void setFlag(Integer flag) {
 		this.flag = flag;
 	}
 	

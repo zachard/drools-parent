@@ -9,7 +9,7 @@ import com.zachard.drools.hello.summary.dao.UserDao;
  * 打印用户订单消费记录函数
  */
  function void logUserConsume(Integer userId, Float amount, Float point) {
-     System.err.println("会员: " + userId + "; 本次消费金额为: " + amount + "; 所得积分为: " + point;
+     System.err.println("会员: " + userId + "; 本次消费金额为: " + amount + "; 所得积分为: " + point);
  }
  
  /**
@@ -28,7 +28,7 @@ rule "primaryMember.01"
         $order : Order(orderAmount <= 20.0);   // 存在一个Order类型的对象,订单的总额小于等于20
         $user : User(userLevel == "初级会员");  // 用户已登录,并且登录的用户为初级会员
     then
-        $order.setOrderPoint((float) $order.getOrderAmount() * 0.5);  // 设置订单的积分
+        $order.setOrderPoint((float) ($order.getOrderAmount() * 0.5));  // 设置订单的积分
         // 设置用户积分(原来积分加上新增订单积分)
         $user.setUserPoint((float) ($user.getUserPoint() + $order.getOrderAmount() * 0.5));
         logUserConsume($user.getUserId(), $order.getOrderAmount(), $order.getOrderPoint());
@@ -105,6 +105,9 @@ rule "primaryToHigh"
             
             if (levelResult && pointResult) {
                 System.err.println("升级高级会员成功");
+                //important 注: 这里必须将setXXX()的修改更新到Working Memory中
+                // 不然当积分大于200时,会触发初级会员转临时会员的规则 (虽然数据库修改为高级会员,但是Working Memory中未更新)
+                update($user);
             }
         }
 end
@@ -121,8 +124,9 @@ rule "temporaryMember.01"
         UserDao userDao = new UserDao();
         
         // 如果临时会员折扣小于3次,可再次进行折扣
-        if ($user.getFlag < 3) {
+        if ($user.getFlag() < 3) {
             $order.setOrderAmount((float) ($order.getOrderAmount() * 0.95));
+            $order.setOrderPoint(0.0f);
             
             // 更新临时会员使用次数
             boolean flagResult = userDao.updateFlagById($user.getUserId());
@@ -135,10 +139,11 @@ rule "temporaryMember.01"
         }
         
         // 临时会员3次购物之后,自动转为初级会员
-        if ($user.getFlag == 3) {
+        if ($user.getFlag() == 3) {
             System.err.println("您的临时会员已使用三次,自动转为初级会员!");
             $user.setUserLevel("初级会员");
             userDao.updateLevelById($user.getUserId(), $user.getUserLevel());
+            update($user);
         }
 end
 
@@ -166,6 +171,7 @@ rule "primaryToTemporary"
             
             if (levelResult && pointResult) {
                 System.err.println("升级临时会员成功");
+                update($user);
             }
         }
 end

@@ -313,7 +313,7 @@ public class DbHelper {
 			
 			for (int i = 0; i < count; i++) {
 				String columnName = resultSet.getMetaData().getColumnName(i + 1);
-				map.put(columnName, resultSet.getObject(i));
+				map.put(columnName, resultSet.getObject(i + 1));
 			}
 		}
 		

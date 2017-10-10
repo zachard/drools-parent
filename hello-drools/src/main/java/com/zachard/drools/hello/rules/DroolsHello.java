@@ -21,7 +21,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
 /**
- * The description...
+ * Drools入门测试类
  * <pre>
  * </pre>
  *
