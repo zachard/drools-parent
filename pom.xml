@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   
   <modelVersion>4.0.0</modelVersion>
@@ -17,6 +18,8 @@
       <apache.common.collection.version>3.2.1</apache.common.collection.version>
       <drools.version>6.5.0.Final</drools.version>
       <knowledge.api.version>6.5.0.Final</knowledge.api.version>
+      <mysql.version>5.1.30</mysql.version>
+      <druid.version>0.2.26</druid.version>
   </properties>
   
   <dependencyManagement>
@@ -62,6 +65,18 @@
 		      <version>${apache.common.collection.version}</version>
 		  </dependency>
 		  
+		  <!-- mysql and database -->
+		  <dependency>
+		      <groupId>mysql</groupId>
+		      <artifactId>mysql-connector-java</artifactId>
+		      <version>${mysql.version}</version>
+		  </dependency>
+		  <dependency>
+		      <groupId>com.alibaba</groupId>
+		      <artifactId>druid</artifactId>
+		      <version>${druid.version}</version>
+		  </dependency>
+		  
 		  <!-- drools -->
 		  <dependency>
 		      <groupId>org.kie</groupId>
@@ -103,5 +118,7 @@
   
   <modules>
   	<module>hello-drools</module>
+    <module>summary-hello</module>
+    <module>drools-common</module>
   </modules>
 </project>
