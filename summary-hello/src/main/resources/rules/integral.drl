@@ -202,3 +202,4 @@ rule "allFitPoint"
                 update($user);
             }
         }
+end

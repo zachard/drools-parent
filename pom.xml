@@ -119,5 +119,6 @@
   <modules>
   	<module>hello-drools</module>
     <module>summary-hello</module>
+    <module>drools-common</module>
   </modules>
 </project>
